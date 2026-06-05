@@ -9,6 +9,53 @@ REQUIRED FORMAT FOR EACH ASSET ENTRY:
 
 ## ASSET:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ASSET:toiflow 2026-06-05 → GitHub org created and repos migrated to toiflow
+
+**GitHub org:** `toiflow` (created as `toigroup`, renamed to `toiflow`)
+
+| Repo | Old path | New path |
+|---|---|---|
+| `-toiflow` | `jayreck996/-toiflow` | `toiflow/-toiflow` |
+| `gs-anz` | `jayreck996/gs-anz` | `toiflow/gs-anz` |
+
+**Org-level secret set:**
+| Secret | Scope | Purpose |
+|---|---|---|
+| `OLLAMA_SECRET` | All repos | WAF header for `local.toigroup.co.nz` |
+
+**Token value:** `dd61a15068a97962e43a97e0c077db887af7b781210003591fcae6f080698e39`
+*(also needs to be added to Cloudflare WAF rule — not yet done)*
+
+**Local git remote updated:** `git remote set-url origin https://github.com/toiflow/-toiflow.git`
+
+## ASSET:toiflow 2026-06-05 → must-update-access reusable workflow — centralises Ollama call logic
+
+**File:** `toiflow/-toiflow/.github/workflows/must-update-access.yml`
+
+**Purpose:** Single place for all Ollama call logic. Any repo in the `toiflow` org can call it — no per-repo secret config needed.
+
+**Inputs:** `prompt` (required), `model` (default: `qwen2.5:7b`)
+**Output:** `response` (string)
+**Secret:** `OLLAMA_SECRET` inherited from org-level secret automatically
+
+**Usage in calling workflow:**
+```yaml
+- uses: toiflow/-toiflow/.github/workflows/must-update-access.yml@main
+  with:
+    prompt: "..."
+  secrets: inherit
+```
+
+**Pending:** gs-anz still calls Ollama directly — needs to be updated to use this workflow. Cloudflare WAF rule not yet added.
+
+**Cloudflare WAF rule added via API:**
+- Rule ID: `a1f028b8a4cc49e08cb55ac08cf024bd`
+- Ruleset ID: `31191f64c03240e4b6b6628ede323bfe`
+- Expression: `(http.host eq "local.toigroup.co.nz" and not http.request.headers["x-secret"][0] eq "dd61a15068a97962e43a97e0c077db887af7b781210003591fcae6f080698e39")`
+- Action: Block
+
+**Verified:** without header → 403 ✓ | with `x-secret` header → 200 ✓
+
 ## ASSET:gs-anz 2026-06-05 → WAF secret header handoff — documented in -toiflow ISSUE
 
 Cloudflare WAF rule for `local.toigroup.co.nz` not yet implemented. Handoff notes written to `-toiflow/-ISSUE-v1.md` with full 5-step instructions for other team. No code changes made — gs-anz pipeline runs without the header until this is actioned.

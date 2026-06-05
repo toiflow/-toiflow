@@ -9,11 +9,19 @@ REQUIRED FORMAT FOR EACH ISSUE ENTRY:
 
 ## ISSUE:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
-## ISSUE:gs-anz 2026-06-05 → Cloudflare WAF secret header on local.toigroup.co.nz — parked
+## ISSUE:toiflow 2026-06-05 → gs-anz still calls Ollama directly — not yet using must-update-access
 
-**Status:** `local.toigroup.co.nz` is publicly accessible with no authentication. Anyone who finds the URL can hit the Ollama API.
+**Status:** gs-anz `would-update-md.js` still calls `local.toigroup.co.nz` directly without the `x-secret` header. Reusable workflow `must-update-access` exists but gs-anz hasn't been updated to use it.
 
-**Parked:** WAF rule requiring `x-secret` header on `local.toigroup.co.nz` not yet added. Free Cloudflare plan supports this. Handed off to another team.
+**Note:** Cloudflare WAF rule is now active — gs-anz pipeline will fail until updated to pass the `x-secret` header via `must-update-access`.
+
+**Pending:**
+1. Update `would-update-md.js` — remove direct Ollama fetch
+2. Update `would-update.yml` — replace Ollama call with `uses: toiflow/-toiflow/.github/workflows/must-update-access.yml@main` + `secrets: inherit`
+
+## ISSUE:gs-anz 2026-06-05 → Cloudflare WAF secret header on local.toigroup.co.nz — RESOLVED
+
+**Status:** WAF rule active. `local.toigroup.co.nz` now blocks all requests missing `x-secret` header. Rule added via Cloudflare API. Verified 403 without header, 200 with header.
 
 **When actioned:** Add the header to `would-update-md.js` (`callOllama` fetch headers) and `would-update.yml` env (new secret `OLLAMA_SECRET`), then add WAF rule in Cloudflare dashboard → `toigroup.co.nz` → Security → WAF.
 
