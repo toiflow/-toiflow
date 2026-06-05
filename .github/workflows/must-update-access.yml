@@ -11,9 +11,6 @@ on:
         description: Ollama model name
         type: string
         default: qwen2.5:7b
-    secrets:
-      OLLAMA_SECRET:
-        required: true
     outputs:
       response:
         description: Ollama response text
