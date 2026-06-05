@@ -9,17 +9,23 @@ REQUIRED FORMAT FOR EACH ISSUE ENTRY:
 
 ## ISSUE:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
-## ISSUE:toiflow 2026-06-05 → org-level secrets pending — GS_ANZ_TOKEN, OLLAMA_SECRET, OLLAMA_URL
+## ISSUE:toiflow 2026-06-05 → org-level secrets — GS_ANZ_TOKEN still repo-level in gs-anz
 
-**Status:** All three secrets currently set at repo level in `toiflow/gs-anz`. Plan is to move to org level (`--visibility all`) so all `toiflow` repos inherit them without per-repo config.
+**Current org-level secrets (all repos inherit):**
+| Secret | Value | Status |
+|---|---|---|
+| `OLLAMA_SECRET` | WAF header token | ✅ Org level |
+| `OLLAMA_URL` | `https://local.toigroup.co.nz` | ✅ Org level |
+| `GS_ANZ_TOKEN` | GitHub PAT for repo writes | ❌ Still repo-level in gs-anz |
 
-**Blocked on:** `admin:org` GitHub scope not yet granted. Once browser auth completes (`gh auth refresh -h github.com -s admin:org`), run:
-```bash
-gh secret set GS_ANZ_TOKEN --org toiflow --visibility all --body "$(gh auth token)"
-gh secret set OLLAMA_SECRET --org toiflow --visibility all --body "<token>"
-gh secret set OLLAMA_URL --org toiflow --visibility all --body "https://local.toigroup.co.nz"
-```
-Then remove repo-level duplicates from `toiflow/gs-anz`.
+**Request for gs-anz team:**
+1. Re-generate or locate the `GS_ANZ_TOKEN` PAT — ensure it has **repo write** scope for all repos in the `toiflow` org (not just gs-anz)
+2. Set at org level: `gh secret set GS_ANZ_TOKEN --org toiflow --visibility all --body "<token>"`
+3. Delete the repo-level duplicate from `toiflow/gs-anz` settings
+
+**Also request for gs-anz team:**
+- Remove repo-level `OLLAMA_SECRET` and `OLLAMA_URL` from `toiflow/gs-anz` settings — both are now inherited from org
+- Update `would-update.yml` to use `secrets: inherit` and call `toiflow/-toiflow/.github/workflows/must-update-access.yml@main` for Ollama instead of calling directly (WAF will block direct calls without `x-secret` header)
 
 ## ISSUE:toiflow 2026-06-05 → gs-anz still calls Ollama directly — not yet using must-update-access
 
