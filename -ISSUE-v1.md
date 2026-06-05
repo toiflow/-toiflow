@@ -9,6 +9,30 @@ REQUIRED FORMAT FOR EACH ISSUE ENTRY:
 
 ## ISSUE:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ISSUE:toiflow 2026-06-06 → must-update-access renamed to must-update-content
+
+`must-update-access.yml` name no longer reflects its purpose — the workflow generates content via Ollama, not manages access.
+
+**Fix:** Renamed file to `must-update-content.yml` and updated `name:` field inside. Updated caller reference in `toiflow/gs-anz` `would-update.yml` (2 occurrences on jobs `issue` and `asset`).
+
+## ISSUE:toigroup 2026-06-06 → DKIM "Start authentication" returned not-verified error despite DNS record being correct
+
+**Symptom:** Clicked "Start authentication" in Google Admin — returned "Email authentication was not verified. Please allow 48 hours for DNS to update."
+
+**Root cause:** Not a DNS problem. `Resolve-DnsName google._domainkey.toigroup.co.nz TXT -Server 8.8.8.8` confirms record is live and correct on Google's own resolvers. Google Admin's verifier has its own internal cache/retry schedule — likely cached a "not found" result from when the zone was newly active.
+
+**Fix:** Wait 1–2 hours, retry "Start authentication". Record will verify once Google's verifier re-checks.
+
+**Next after DKIM activates:** Run mail-tester.com test — send from `@toigroup.co.nz` and confirm SPF, DKIM, DMARC all green.
+
+## ISSUE:toigroup 2026-06-06 → DKIM shows "Not authenticating email" in Google Admin despite DNS record being live
+
+**Symptom:** Google Admin Console → Gmail → Authenticate email shows status "Not authenticating email" for `toigroup.co.nz`.
+
+**Root cause:** DNS record `google._domainkey.toigroup.co.nz` is live and correct — confirmed via `Resolve-DnsName`. Issue is that **"Start authentication" button was never clicked** in Google Admin after the record was published.
+
+**Fix:** Click "Start authentication" in Google Admin → Apps → Google Workspace → Gmail → Authenticate email → `toigroup.co.nz`. Google verifies the live DNS record and activates DKIM signing immediately.
+
 ## ISSUE:toiflow 2026-06-05 → GS_ANZ_TOKEN unnecessary — can be replaced with github.token
 
 **Finding:** `GS_ANZ_TOKEN` in `toiflow/gs-anz` `would-update.yml` is used only as a `GITHUB_TOKEN` override for writes to its own repo. The built-in `github.token` covers this — no custom PAT needed.

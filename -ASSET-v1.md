@@ -9,6 +9,26 @@ REQUIRED FORMAT FOR EACH ASSET ENTRY:
 
 ## ASSET:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ASSET:toiflow 2026-06-06 → must-update-access.yml renamed to must-update-content.yml
+
+- Renamed `.github/workflows/must-update-access.yml` → `must-update-content.yml`
+- Updated `name:` field inside the file from `must-update-access` to `must-update-content`
+- Updated `toiflow/gs-anz` `would-update.yml` — both `issue` and `asset` job `uses:` references updated to `must-update-content.yml@main`
+
+## ASSET:toigroup 2026-06-06 → DKIM verification pending — DNS correct, Google verifier not yet confirmed
+
+- `Resolve-DnsName google._domainkey.toigroup.co.nz TXT -Server 8.8.8.8` — record live, matches Google Admin key exactly
+- "Start authentication" clicked — returned not-verified error (Google internal caching, not a DNS issue)
+- **Status:** Waiting on Google verifier retry — expected to pass within 1–2 hours
+- **Next:** Retry "Start authentication" in Google Admin, then run mail-tester.com to confirm SPF/DKIM/DMARC end-to-end
+
+## ASSET:toigroup 2026-06-06 → DKIM activated for toigroup.co.nz — Start authentication clicked
+
+- `Resolve-DnsName google._domainkey.toigroup.co.nz TXT` confirmed record live and matching Google Admin value
+- Root cause of "Not authenticating" status: "Start authentication" button had never been clicked despite DNS being correct
+- Clicked "Start authentication" in Google Admin → Apps → Google Workspace → Gmail → Authenticate email
+- DKIM signing now active for `toigroup.co.nz`
+
 ## ASSET:toiflow 2026-06-05 → gs-anz migrated to must-update-access reusable workflow
 
 **Changes made to `toiflow/gs-anz`:**

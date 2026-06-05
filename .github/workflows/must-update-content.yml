@@ -1,4 +1,4 @@
-name: must-update-access
+name: must-update-content
 
 on:
   workflow_call:
