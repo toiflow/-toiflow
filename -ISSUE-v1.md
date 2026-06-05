@@ -9,6 +9,23 @@ REQUIRED FORMAT FOR EACH ISSUE ENTRY:
 
 ## ISSUE:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ISSUE:toiflow 2026-06-05 → GS_ANZ_TOKEN unnecessary — can be replaced with github.token
+
+**Finding:** `GS_ANZ_TOKEN` in `toiflow/gs-anz` `would-update.yml` is used only as a `GITHUB_TOKEN` override for writes to its own repo. The built-in `github.token` covers this — no custom PAT needed.
+
+**Request for gs-anz team:**
+1. In `would-update.yml`, change:
+   ```yaml
+   GITHUB_TOKEN: ${{ secrets.GS_ANZ_TOKEN }}
+   ```
+   to:
+   ```yaml
+   GITHUB_TOKEN: ${{ github.token }}
+   ```
+2. Delete `GS_ANZ_TOKEN` from `toiflow/gs-anz` repo secrets
+
+**Result:** No custom token needed at all. Org secrets reduce to `OLLAMA_SECRET` and `OLLAMA_URL` only — both already set at org level.
+
 ## ISSUE:toiflow 2026-06-05 → GS_ANZ_TOKEN still repo-level in gs-anz — not yet org-level
 
 **Current org secrets (all toiflow repos inherit):**

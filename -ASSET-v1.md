@@ -9,6 +9,17 @@ REQUIRED FORMAT FOR EACH ASSET ENTRY:
 
 ## ASSET:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ASSET:toiflow 2026-06-05 → org-level secrets finalised — OLLAMA_SECRET, OLLAMA_URL
+
+**All toiflow repos now inherit these secrets automatically (`secrets: inherit` in workflows):**
+
+| Secret | Value | Set via |
+|---|---|---|
+| `OLLAMA_SECRET` | WAF header token | `gh secret set --org toiflow --visibility all` |
+| `OLLAMA_URL` | `https://local.toigroup.co.nz` | `gh secret set --org toiflow --visibility all` |
+
+**No other org secrets needed.** `GS_ANZ_TOKEN` (gs-anz repo-level) is redundant — see ISSUE entry.
+
 ## ASSET:toiflow 2026-06-05 → GitHub org created and repos migrated to toiflow
 
 **GitHub org:** `toiflow` (created as `toigroup`, renamed to `toiflow`)
