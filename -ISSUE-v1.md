@@ -9,6 +9,18 @@ REQUIRED FORMAT FOR EACH ISSUE ENTRY:
 
 ## ISSUE:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ISSUE:toiflow 2026-06-05 → org-level secrets pending — GS_ANZ_TOKEN, OLLAMA_SECRET, OLLAMA_URL
+
+**Status:** All three secrets currently set at repo level in `toiflow/gs-anz`. Plan is to move to org level (`--visibility all`) so all `toiflow` repos inherit them without per-repo config.
+
+**Blocked on:** `admin:org` GitHub scope not yet granted. Once browser auth completes (`gh auth refresh -h github.com -s admin:org`), run:
+```bash
+gh secret set GS_ANZ_TOKEN --org toiflow --visibility all --body "$(gh auth token)"
+gh secret set OLLAMA_SECRET --org toiflow --visibility all --body "<token>"
+gh secret set OLLAMA_URL --org toiflow --visibility all --body "https://local.toigroup.co.nz"
+```
+Then remove repo-level duplicates from `toiflow/gs-anz`.
+
 ## ISSUE:toiflow 2026-06-05 → gs-anz still calls Ollama directly — not yet using must-update-access
 
 **Status:** gs-anz `would-update-md.js` still calls `local.toigroup.co.nz` directly without the `x-secret` header. Reusable workflow `must-update-access` exists but gs-anz hasn't been updated to use it.
