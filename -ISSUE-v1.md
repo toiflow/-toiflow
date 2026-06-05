@@ -42,6 +42,17 @@ REQUIRED FORMAT FOR EACH ISSUE ENTRY:
 
 **Also request:** Update `would-update.yml` to use `secrets: inherit` and call `toiflow/-toiflow/.github/workflows/must-update-access.yml@main` for Ollama — direct calls to `local.toigroup.co.nz` now blocked by WAF without `x-secret` header.
 
+## ISSUE:toiflow 2026-06-05 → OLLAMA_SECRET + OLLAMA_URL still repo-level in gs-anz — pending org migration
+
+`OLLAMA_SECRET` and `OLLAMA_URL` are set at repo level in `toiflow/gs-anz`. Plan is to move to org level once `admin:org` browser auth completes. `GS_ANZ_TOKEN` has been removed — no longer needed.
+
+**When ready:** `gh auth refresh -h github.com -s admin:org`, then:
+```bash
+gh secret set OLLAMA_SECRET --org toiflow --visibility all --body "<token>"
+gh secret set OLLAMA_URL --org toiflow --visibility all --body "https://local.toigroup.co.nz"
+```
+Then delete repo-level duplicates from `toiflow/gs-anz`.
+
 ## ISSUE:toiflow 2026-06-05 → org-level secrets pending — GS_ANZ_TOKEN, OLLAMA_SECRET, OLLAMA_URL
 
 **Status:** All three secrets currently set at repo level in `toiflow/gs-anz`. Plan is to move to org level (`--visibility all`) so all `toiflow` repos inherit them without per-repo config.

@@ -9,6 +9,21 @@ REQUIRED FORMAT FOR EACH ASSET ENTRY:
 
 ## ASSET:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ASSET:toiflow 2026-06-05 → gs-anz migrated to must-update-access reusable workflow
+
+**Changes made to `toiflow/gs-anz`:**
+
+| Change | Detail |
+|---|---|
+| `would-update-docs.js` (new) | Reads `ISSUE_ANALYSIS` + `ASSET_ANALYSIS` from env, updates GitHub files only — no Ollama |
+| `would-update.yml` restructured | 4 jobs: `fetch` → `issue` + `asset` (reusable) → `update` |
+| Ollama calls | Now handled by `toiflow/-toiflow/.github/workflows/must-update-access.yml` |
+| `github.token` | Replaces `GS_ANZ_TOKEN` — `contents: write` permission on `update` job |
+| `GS_ANZ_TOKEN` | Deleted from repo secrets — no longer needed |
+| `-toiflow` access level | Set to `organization` via API (`access_level: none` → `organization`) |
+
+**Verified:** `workflow_dispatch` run passed all 4 jobs end-to-end.
+
 ## ASSET:toiflow 2026-06-05 → org-level secrets finalised — OLLAMA_SECRET, OLLAMA_URL
 
 **All toiflow repos now inherit these secrets automatically (`secrets: inherit` in workflows):**
