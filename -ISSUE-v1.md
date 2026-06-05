@@ -19,6 +19,14 @@ REQUIRED FORMAT FOR EACH ISSUE ENTRY:
 
 **Fix:** Added `originRequest.httpHostHeader: localhost` to the `local.toigroup.co.nz` ingress rule in `~/.cloudflared/toigroup.yml`. Restarted tunnel. Verified `curl https://local.toigroup.co.nz/api/tags` → 200 with model data. See ASSET entry.
 
+## ISSUE:toigroup 2026-06-05 → toifood tunnel being managed by both PM2 and launchd — duplicate connectors
+
+**What happened:** When `config.yml` was renamed to `toifood.yml` and the launchd plist was updated, both PM2 (`cloudflare-tunnel`) and launchd were running the toifood tunnel simultaneously — causing duplicate connectors on Cloudflare's edge.
+
+**Root cause:** PM2 was already managing the toifood tunnel via `cloudflared tunnel run toifood` (using default `config.yml`). The launchd service had been broken (exit code 1) all along and was not the active manager. After updating the plist, both came online at the same time.
+
+**Fix:** Unloaded the launchd service. Updated PM2 `cloudflare-tunnel` entry to use `--config toifood.yml` explicitly. PM2 is now the sole manager for both tunnels. See ASSET entry.
+
 ## ISSUE:toigroup 2026-06-05 → cloudflared tunnel route dns using wrong zone — cert.pem only authorized for toifood.co.nz
 
 **Symptom:** `cloudflared tunnel route dns toigroup local.toigroup.co.nz` kept creating the CNAME in `toifood.co.nz` zone instead of `toigroup.co.nz`.

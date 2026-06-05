@@ -26,6 +26,28 @@ ingress:
 
 **Verified:** `curl https://local.toigroup.co.nz/api/tags` returns 200 with `qwen2.5:7b` model data. Tunnel fully operational.
 
+## ASSET:toigroup 2026-06-05 → both Cloudflare tunnels migrated to PM2 + named yml configs
+
+**PM2 process list (final state):**
+| PM2 name | Config | Tunnel | Endpoint |
+|---|---|---|---|
+| `cloudflare-tunnel` | `~/.cloudflared/toifood.yml` | toifood (42668d09) | `api.toifood.co.nz` → localhost:3000 |
+| `toigroup-tunnel` | `~/.cloudflared/toigroup.yml` | toigroup (cb04f233) | `local.toigroup.co.nz` → Ollama :11434 |
+
+**Changes made:**
+- `~/.cloudflared/config.yml` renamed to `toifood.yml` (was the default config for toifood tunnel)
+- PM2 `cloudflare-tunnel` entry updated to use explicit `--config toifood.yml` flag
+- `toigroup-tunnel` added to PM2
+- `config.yml` deleted
+- LaunchAgent (`~/Library/LaunchAgents/com.cloudflare.cloudflared.plist`) unloaded — PM2 is the sole manager
+- PM2 dump saved (`pm2 save`)
+
+**Start commands (if manual restart needed):**
+```bash
+pm2 restart cloudflare-tunnel
+pm2 restart toigroup-tunnel
+```
+
 ## ASSET:toigroup 2026-06-05 → cloudflared tunnel login — cert.pem updated for toigroup.co.nz
 
 **Change:** Moved old `cert.pem` (toifood.co.nz only) to `cert.pem.bak`. Ran `cloudflared tunnel login`, selected `toigroup.co.nz`. New cert issued at `~/.cloudflared/cert.pem`.
