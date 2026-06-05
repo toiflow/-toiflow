@@ -9,6 +9,22 @@ REQUIRED FORMAT FOR EACH ISSUE ENTRY:
 
 ## ISSUE:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ISSUE:toiflow 2026-06-05 → GS_ANZ_TOKEN still repo-level in gs-anz — not yet org-level
+
+**Current org secrets (all toiflow repos inherit):**
+| Secret | Status |
+|---|---|
+| `OLLAMA_SECRET` | ✅ Org level |
+| `OLLAMA_URL` | ✅ Org level (set 2026-06-05) |
+| `GS_ANZ_TOKEN` | ❌ Repo-level in toiflow/gs-anz only |
+
+**Request for gs-anz team:**
+1. Locate or regenerate the `GS_ANZ_TOKEN` PAT — ensure it has **repo write** scope for all repos in the `toiflow` org
+2. Set at org level: `gh secret set GS_ANZ_TOKEN --org toiflow --visibility all --body "<token>"`
+3. Delete repo-level `GS_ANZ_TOKEN`, `OLLAMA_SECRET`, `OLLAMA_URL` from `toiflow/gs-anz` repo settings — all three will then be inherited from org
+
+**Also request:** Update `would-update.yml` to use `secrets: inherit` and call `toiflow/-toiflow/.github/workflows/must-update-access.yml@main` for Ollama — direct calls to `local.toigroup.co.nz` now blocked by WAF without `x-secret` header.
+
 ## ISSUE:toiflow 2026-06-05 → org-level secrets pending — GS_ANZ_TOKEN, OLLAMA_SECRET, OLLAMA_URL
 
 **Status:** All three secrets currently set at repo level in `toiflow/gs-anz`. Plan is to move to org level (`--visibility all`) so all `toiflow` repos inherit them without per-repo config.
