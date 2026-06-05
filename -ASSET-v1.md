@@ -9,6 +9,10 @@ REQUIRED FORMAT FOR EACH ASSET ENTRY:
 
 ## ASSET:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ASSET:gs-anz 2026-06-05 → WAF secret header handoff — documented in -toiflow ISSUE
+
+Cloudflare WAF rule for `local.toigroup.co.nz` not yet implemented. Handoff notes written to `-toiflow/-ISSUE-v1.md` with full 5-step instructions for other team. No code changes made — gs-anz pipeline runs without the header until this is actioned.
+
 ## ASSET:gs-anz 2026-06-05 → gs-anz pipeline fully operational — GitHub Actions + Ollama
 
 Migrated `gs-anz` from Google Apps Script + Claude API to GitHub Actions + local Ollama via Cloudflare Tunnel. All steps complete and tested end-to-end.
