@@ -22,8 +22,7 @@ Migrated `gs-anz` from Google Apps Script + Claude API to GitHub Actions + local
 | Output: `would/-content-asset-v1.md` | ✅ ASSET entries written |
 | Secrets: `GS_ANZ_TOKEN`, `OLLAMA_URL` | ✅ Set in repo settings |
 | Old GAS files | ✅ Deleted (`config.js`, `appsscript.json`, `must-*.js`) |
-
-**Pending:** Cloudflare WAF secret header on `local.toigroup.co.nz` — parked for another team.
+| Security (WAF secret header) | ⏸ Parked — see ISSUE entry |
 
 ## ASSET:toigroup 2026-06-05 → local.toigroup.co.nz — Ollama tunnel fully operational
 
