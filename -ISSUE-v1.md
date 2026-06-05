@@ -17,6 +17,19 @@ REQUIRED FORMAT FOR EACH ISSUE ENTRY:
 
 **When actioned:** Add the header to `would-update-md.js` (`callOllama` fetch headers) and `would-update.yml` env (new secret `OLLAMA_SECRET`), then add WAF rule in Cloudflare dashboard → `toigroup.co.nz` → Security → WAF.
 
+## ISSUE:gs-anz 2026-06-05 → WAF secret header handoff notes — steps for other team
+
+1. **Generate a secret token** — `openssl rand -hex 32`
+
+2. **Cloudflare WAF rule** — `toigroup.co.nz` → Security → WAF → Custom rules → Create rule:
+   - Field: `Request Header` `x-secret` does not equal `<token>` → Action: Block
+
+3. **Add GitHub secret** — `gs-anz` repo → Settings → Secrets → Actions → `OLLAMA_SECRET` = `<token>`
+
+4. **Update `would-update.yml`** env block: `OLLAMA_SECRET: ${{ secrets.OLLAMA_SECRET }}`
+
+5. **Update `would-update-md.js`** `callOllama` fetch headers: add `'x-secret': process.env.OLLAMA_SECRET`
+
 ## ISSUE:toigroup 2026-06-05 → local.toigroup.co.nz Ollama endpoint open to internet — no auth
 
 **Status:** `local.toigroup.co.nz` is publicly accessible with no authentication. Anyone who finds the URL can use the GPU.
