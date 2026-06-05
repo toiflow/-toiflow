@@ -9,6 +9,29 @@ REQUIRED FORMAT FOR EACH ASSET ENTRY:
 
 ## ASSET:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ASSET:toigroup 2026-06-05 → toigroup.yml — httpHostHeader fix for Ollama DNS rebinding protection
+
+**Change:** Added `originRequest.httpHostHeader: localhost` to the ingress rule in `~/.cloudflared/toigroup.yml`:
+
+```yaml
+ingress:
+  - hostname: local.toigroup.co.nz
+    service: http://127.0.0.1:11434
+    originRequest:
+      httpHostHeader: localhost
+  - service: http_status:404
+```
+
+**Why:** Ollama rejects requests where `Host` header is not `localhost`/`127.0.0.1`. Cloudflared was forwarding `Host: local.toigroup.co.nz`, causing 403. This rewrite makes cloudflared send `Host: localhost` to Ollama before forwarding.
+
+**Verified:** `curl https://local.toigroup.co.nz/api/tags` returns 200 with `qwen2.5:7b` model data. Tunnel fully operational.
+
+## ASSET:toigroup 2026-06-05 → cloudflared tunnel login — cert.pem updated for toigroup.co.nz
+
+**Change:** Moved old `cert.pem` (toifood.co.nz only) to `cert.pem.bak`. Ran `cloudflared tunnel login`, selected `toigroup.co.nz`. New cert issued at `~/.cloudflared/cert.pem`.
+
+**Result:** `cloudflared tunnel route dns toigroup local.toigroup.co.nz` now correctly recognises the toigroup.co.nz zone.
+
 ## ASSET:toigroup 2026-06-05 → DMARC rua corrected in Cloudflare DNS
 
 **Change:** Edited `_dmarc` TXT record in Cloudflare dashboard → `toigroup.co.nz` → DNS:

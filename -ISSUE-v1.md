@@ -9,6 +9,24 @@ REQUIRED FORMAT FOR EACH ISSUE ENTRY:
 
 ## ISSUE:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ISSUE:toigroup 2026-06-05 → local.toigroup.co.nz tunnel 403 — Ollama DNS rebinding protection blocking external Host header
+
+**Symptom:** `curl https://local.toigroup.co.nz/api/tags` returns 403. Tunnel is connected, Ollama is running. Cloudflare tunnel metrics confirm 403 is coming from the origin (Ollama), not Cloudflare's edge.
+
+**Root cause:** cloudflared forwards the original `Host: local.toigroup.co.nz` header to Ollama. Newer Ollama versions reject requests where `Host` is not `localhost` or `127.0.0.1` as DNS rebinding protection.
+
+**Confirmed by:** `curl -H "Host: local.toigroup.co.nz" http://127.0.0.1:11434/api/tags` → 403
+
+**Fix:** Added `originRequest.httpHostHeader: localhost` to the `local.toigroup.co.nz` ingress rule in `~/.cloudflared/toigroup.yml`. Restarted tunnel. Verified `curl https://local.toigroup.co.nz/api/tags` → 200 with model data. See ASSET entry.
+
+## ISSUE:toigroup 2026-06-05 → cloudflared tunnel route dns using wrong zone — cert.pem only authorized for toifood.co.nz
+
+**Symptom:** `cloudflared tunnel route dns toigroup local.toigroup.co.nz` kept creating the CNAME in `toifood.co.nz` zone instead of `toigroup.co.nz`.
+
+**Root cause:** `cert.pem` at `~/.cloudflared/cert.pem` was generated when `cloudflared tunnel login` was run originally for `toifood.co.nz`. The cert only authorized that zone for route management operations. When `route dns` couldn't find an active authorized zone matching `toigroup.co.nz`, it fell back to `toifood.co.nz`.
+
+**Fix:** Moved `cert.pem` to `cert.pem.bak`, ran `cloudflared tunnel login`, selected `toigroup.co.nz`. New cert issued. `route dns` then confirmed `local.toigroup.co.nz is already configured` in the correct zone.
+
 ## ISSUE:toigroup 2026-06-05 → DMARC rua still pointing to GoDaddy after NS migration to Cloudflare
 
 **Root cause:** Cloudflare imported the `_dmarc` TXT record from GoDaddy before the `rua` update was saved. The live record still has `rua=mailto:dmarc_rua@onsecureserver.net` (GoDaddy) instead of `reck@toigroup.co.nz`. SPF and DKIM are intact so email delivery is fine — but DMARC aggregate reports are going to GoDaddy, not the inbox.
