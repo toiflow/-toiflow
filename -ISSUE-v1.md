@@ -9,6 +9,22 @@ REQUIRED FORMAT FOR EACH ISSUE ENTRY:
 
 ## ISSUE:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ISSUE:gs-anz 2026-06-05 → Cloudflare WAF secret header on local.toigroup.co.nz — parked
+
+**Status:** `local.toigroup.co.nz` is publicly accessible with no authentication. Anyone who finds the URL can hit the Ollama API.
+
+**Parked:** WAF rule requiring `x-secret` header on `local.toigroup.co.nz` not yet added. Free Cloudflare plan supports this. Handed off to another team.
+
+**When actioned:** Add the header to `would-update-md.js` (`callOllama` fetch headers) and `would-update.yml` env (new secret `OLLAMA_SECRET`), then add WAF rule in Cloudflare dashboard → `toigroup.co.nz` → Security → WAF.
+
+## ISSUE:toigroup 2026-06-05 → local.toigroup.co.nz Ollama endpoint open to internet — no auth
+
+**Status:** `local.toigroup.co.nz` is publicly accessible with no authentication. Anyone who finds the URL can use the GPU.
+
+**Risk:** Ollama API has no built-in auth — requests accepted from any source as long as `Host: localhost` header is set (handled by cloudflared `httpHostHeader`).
+
+**Planned fix:** Add Cloudflare WAF rule on `toigroup.co.nz` to block requests to `local.toigroup.co.nz` missing a secret header (e.g. `x-secret: <token>`). Free plan supports this. gs-anz GitHub Actions workflow will include the header in all requests.
+
 ## ISSUE:toigroup 2026-06-05 → local.toigroup.co.nz tunnel 403 — Ollama DNS rebinding protection blocking external Host header
 
 **Symptom:** `curl https://local.toigroup.co.nz/api/tags` returns 403. Tunnel is connected, Ollama is running. Cloudflare tunnel metrics confirm 403 is coming from the origin (Ollama), not Cloudflare's edge.

@@ -9,6 +9,40 @@ REQUIRED FORMAT FOR EACH ASSET ENTRY:
 
 ## ASSET:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ASSET:gs-anz 2026-06-05 → gs-anz pipeline fully operational — GitHub Actions + Ollama
+
+Migrated `gs-anz` from Google Apps Script + Claude API to GitHub Actions + local Ollama via Cloudflare Tunnel. All steps complete and tested end-to-end.
+
+| Component | Status |
+|---|---|
+| `would-read-md.js` | ✅ Fetches NZ interest rate RSS, filters by keyword, caps at 5 items |
+| `would-update-md.js` | ✅ Pipes news → Ollama `qwen2.5:7b` → inserts entries via GitHub API |
+| `.github/workflows/would-update.yml` | ✅ Cron 6am NZST daily (18:00 UTC); also `workflow_dispatch` |
+| Output: `would/-content-issue-v1.md` | ✅ ISSUE entries written |
+| Output: `would/-content-asset-v1.md` | ✅ ASSET entries written |
+| Secrets: `GS_ANZ_TOKEN`, `OLLAMA_URL` | ✅ Set in repo settings |
+| Old GAS files | ✅ Deleted (`config.js`, `appsscript.json`, `must-*.js`) |
+
+**Pending:** Cloudflare WAF secret header on `local.toigroup.co.nz` — parked for another team.
+
+## ASSET:toigroup 2026-06-05 → local.toigroup.co.nz — Ollama tunnel fully operational
+
+**Status:** Step 1 of gs-anz migration complete. `local.toigroup.co.nz` is publicly accessible and routes to Ollama `qwen2.5:7b` on the Mac mini.
+
+| Component | Status |
+|---|---|
+| Tunnel `toigroup` | ✅ Running via PM2 (`toigroup-tunnel`) |
+| DNS `local.toigroup.co.nz` | ✅ CNAME → tunnel registered |
+| Ollama `:11434` | ✅ `qwen2.5:7b` loaded |
+| `httpHostHeader: localhost` | ✅ Fixes Ollama DNS rebinding rejection |
+| Security (secret header) | ❌ Pending — Cloudflare WAF rule not yet added |
+
+**Next steps:**
+- Step 2: Add Cloudflare WAF rule to require `x-secret` header on `local.toigroup.co.nz`
+- Step 3: Write `would-read-md` (RSS fetch) in gs-anz
+- Step 4: Write `would-update-md` (Ollama call + update docs) in gs-anz
+- Step 5: GitHub Actions workflow (cron)
+
 ## ASSET:toigroup 2026-06-05 → toigroup.yml — httpHostHeader fix for Ollama DNS rebinding protection
 
 **Change:** Added `originRequest.httpHostHeader: localhost` to the ingress rule in `~/.cloudflared/toigroup.yml`:
