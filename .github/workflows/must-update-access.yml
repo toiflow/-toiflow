@@ -1,0 +1,45 @@
+name: must-update-access
+
+on:
+  workflow_call:
+    inputs:
+      prompt:
+        description: Prompt to send to Ollama
+        type: string
+        required: true
+      model:
+        description: Ollama model name
+        type: string
+        default: qwen2.5:7b
+    secrets:
+      OLLAMA_SECRET:
+        required: true
+    outputs:
+      response:
+        description: Ollama response text
+        value: ${{ jobs.run.outputs.response }}
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    outputs:
+      response: ${{ steps.call.outputs.response }}
+    steps:
+      - id: call
+        env:
+          OLLAMA_SECRET: ${{ secrets.OLLAMA_SECRET }}
+          OLLAMA_URL: https://local.toigroup.co.nz/api/generate
+        run: |
+          BODY=$(jq -n \
+            --arg model "${{ inputs.model }}" \
+            --arg prompt "${{ inputs.prompt }}" \
+            '{model: $model, prompt: $prompt, stream: false}')
+
+          RESPONSE=$(curl -sf -X POST "$OLLAMA_URL" \
+            -H "Content-Type: application/json" \
+            -H "x-secret: $OLLAMA_SECRET" \
+            -d "$BODY" | jq -r '.response')
+
+          echo "response<<EOF" >> $GITHUB_OUTPUT
+          echo "$RESPONSE" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
