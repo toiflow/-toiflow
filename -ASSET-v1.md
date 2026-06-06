@@ -107,7 +107,7 @@ Installed via `winget install GitHub.cli`. Required for org-level secret managem
 |---|---|---|
 | `OLLAMA_SECRET` | All repos | WAF header for `local.toigroup.co.nz` |
 
-**Token value:** `dd61a15068a97962e43a97e0c077db887af7b781210003591fcae6f080698e39`
+**Token value:** `[REDACTED]`
 *(also needs to be added to Cloudflare WAF rule — not yet done)*
 
 **Local git remote updated:** `git remote set-url origin https://github.com/toiflow/-toiflow.git`
@@ -135,7 +135,7 @@ Installed via `winget install GitHub.cli`. Required for org-level secret managem
 **Cloudflare WAF rule added via API:**
 - Rule ID: `a1f028b8a4cc49e08cb55ac08cf024bd`
 - Ruleset ID: `31191f64c03240e4b6b6628ede323bfe`
-- Expression: `(http.host eq "local.toigroup.co.nz" and not http.request.headers["x-secret"][0] eq "dd61a15068a97962e43a97e0c077db887af7b781210003591fcae6f080698e39")`
+- Expression: `(http.host eq "local.toigroup.co.nz" and not http.request.headers["x-secret"][0] eq "[REDACTED]")`
 - Action: Block
 
 **Verified:** without header → 403 ✓ | with `x-secret` header → 200 ✓
