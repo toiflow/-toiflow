@@ -9,6 +9,21 @@ REQUIRED FORMAT FOR EACH ASSET ENTRY:
 
 ## ASSET:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ASSET:toifood 2026-06-07 → pipeline built — -toifood and ts-back repos live
+
+**`toifood/-toifood`**
+- `must-update-content.yml` — reusable workflow calling Claude API (`api.anthropic.com/v1/messages`)
+- Model: `claude-haiku-4-5-20251001` (default), overridable per call
+- Same interface as toiflow's `must-update-content.yml` — `prompt` input, `response` output
+
+**`toifood/ts-back`**
+- `would-update.yml` — fetch + 10 parallel content jobs + update (mirrors toiflow pattern, scaled to 5 categories × issue/asset)
+- `would-read-md.js` — checkouts `jayreck996/ts-toifood-back@1-1-1` into `source/`, reads `-MUST/` instruction files + codebase context (README, package.json, prisma schema, src/ tree), builds 10 prompts
+- `would-update-content.js` — writes Claude responses to `would/migrate-asset-v1.md`, `would/price-issue-v1.md` etc. via GitHub API
+- Org secrets required: `TOIFOOD_CROSS_REPO_TOKEN` ✅, `ANTHROPIC_API_KEY` ⏳
+
+**Architecture delta vs toiflow:** 2 content jobs → 10 (5 categories × issue/asset). All run in parallel (Claude API handles concurrency, unlike Ollama).
+
 ## ASSET:toifood 2026-06-07 → org created, org secret set — repos pending
 
 - `toifood` GitHub org created (free plan)
