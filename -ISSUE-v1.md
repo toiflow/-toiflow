@@ -9,6 +9,18 @@ REQUIRED FORMAT FOR EACH ISSUE ENTRY:
 
 ## ISSUE:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ISSUE:ts-anz 2026-06-06 → stale repo-level OLLAMA_SECRET masked org secret post-rotation
+
+**Symptom:** `ts-anz` failing with empty Ollama response after rename from `gs-anz`. `ts-inbox` and `ts-crypto` passing fine.
+
+**Root cause:** `ts-anz` had repo-level `OLLAMA_SECRET` + `OLLAMA_URL` set `2026-06-05T09:08` — the old pre-rotation value. Repo-level secrets always override org-level. After the rotation updated the org secret, `ts-anz` kept sending the old token → WAF 403 → `curl -sf` empty response.
+
+**Why not caught earlier:** Post-rotation verification only tested `ts-crypto` (run #10). `ts-anz` was never re-triggered after rotation — daily cron hadn't fired yet.
+
+**Fix:** Deleted both repo-level overrides. `ts-anz` now inherits org secrets correctly. Confirmed passing.
+
+**Hard rule:** After any org secret rotation, trigger all repos manually — not just the one that was tested.
+
 ## ISSUE:shell-email 2026-06-06 → jq syntax error — double quotes in prompt broke must-update-content.yml
 
 **Symptom:** `issue` and `asset` jobs failed with `jq: error: syntax error, unexpected IDENT` exit code 3.
