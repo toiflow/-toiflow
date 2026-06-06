@@ -9,6 +9,16 @@ REQUIRED FORMAT FOR EACH ISSUE ENTRY:
 
 ## ISSUE:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ISSUE:ts-event 2026-06-06 → Google Calendar API not enabled in GCP project
+
+**Symptom:** `Calendar GET users/me/calendarList failed: 403 — SERVICE_DISABLED`
+
+**Root cause:** Google Calendar API was not enabled in GCP project `202052754278`. OAuth scope was correctly authorised (`https://www.googleapis.com/auth/calendar`) but the API itself must also be enabled separately in the GCP Console.
+
+**Fix:** GCP Console → APIs & Services → Enable APIs → search "Google Calendar API" → Enable. Propagation takes ~2 minutes.
+
+**Pattern:** Every Google API requires two things — (1) OAuth scope on the refresh token, (2) API enabled in the GCP project. Scope alone is not enough.
+
 ## ISSUE:ts-inbox 2026-06-06 → GMAIL_REFRESH_TOKEN pasted in chat — token exposed, immediately rotated
 
 **What happened:** User pasted a valid `GMAIL_REFRESH_TOKEN` value directly into the chat conversation.

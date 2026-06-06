@@ -9,6 +9,19 @@ REQUIRED FORMAT FOR EACH ASSET ENTRY:
 
 ## ASSET:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ASSET:ts-event 2026-06-06 → pipeline fully operational — Google Calendar → Ollama → email
+
+All 4 jobs passing. ts-event joins ts-anz and ts-inbox as fully operational toiflow pipelines.
+
+| Repo | Source | Schedule | Output |
+|---|---|---|---|
+| `ts-anz` | NZ interest rate RSS | 6pm NZST | `would/` files + CSV |
+| `ts-inbox` | Gmail inbox | 6pm NZST | `would/` files + CSV + `must-email` |
+| `ts-event` | Google Calendar | 6pm NZST | `would/` files + CSV + `must-event` |
+
+**toiflow org secrets used by all three:**
+`OLLAMA_SECRET`, `OLLAMA_URL`, `GMAIL_CLIENT_ID`, `GMAIL_CLIENT_SECRET`, `GMAIL_REFRESH_TOKEN`
+
 ## ASSET:toiflow 2026-06-06 → GCP project config — OAuth scopes + Calendar API enabled
 
 **GCP Project ID:** `202052754278`
