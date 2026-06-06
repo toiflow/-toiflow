@@ -9,6 +9,16 @@ REQUIRED FORMAT FOR EACH ISSUE ENTRY:
 
 ## ISSUE:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ISSUE:toigroup 2026-06-06 → DKIM "Start authentication" kept failing — embedded spaces in base64 key
+
+**Symptom:** All previous "Start authentication" attempts in Google Admin returned "Email authentication was not verified" despite `Resolve-DnsName` confirming the record was live and appeared to match Google's expected value.
+
+**Root cause:** The `google._domainkey.toigroup.co.nz` TXT record had 9 extra space characters embedded inside the base64 `p=` value at multiple points (e.g. `SLDo   o1mi7qT`). The spaces were introduced when the key was pasted into Cloudflare DNS — likely a line-wrap copy/paste artefact from Google Admin. `Resolve-DnsName` display wrapped the output similarly, masking the mismatch. Byte comparison (`$full -eq $expected`) confirmed DNS length was 419 vs expected 410.
+
+**Fix:** Edited the `google._domainkey` TXT record in Cloudflare DNS — pasted the clean single-line value directly from Google Admin (no spaces in `p=`). DNS propagated within ~1 min. `Start authentication` passed immediately with no errors.
+
+**Lesson:** Always byte-compare DKIM DNS records — visual inspection of `Resolve-DnsName` output is unreliable for long base64 values due to terminal line-wrap.
+
 ## ISSUE:toiflow 2026-06-06 → OLLAMA_SECRET exposed in public git history — content redaction insufficient
 
 **Symptom:** Old `OLLAMA_SECRET` value hardcoded in `-ASSET-v1.md` "org secrets corrected" entry, committed and pushed to public `toiflow/-toiflow` repo. Redacting the working copy (replacing with `[REDACTED]`) does NOT remove it from `git log` — the original value remains in history.

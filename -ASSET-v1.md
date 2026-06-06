@@ -9,6 +9,14 @@ REQUIRED FORMAT FOR EACH ASSET ENTRY:
 
 ## ASSET:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ASSET:toigroup 2026-06-06 → DKIM active for toigroup.co.nz — "Start authentication" passed
+
+- Root cause of all prior failures identified: embedded spaces in base64 `p=` value in Cloudflare DNS (see ISSUE entry)
+- Cloudflare `google._domainkey` TXT record corrected — clean single-line value pasted from Google Admin
+- DNS byte-verified: 410 chars, exact match with Google's expected value (`$full -eq $expected` → True)
+- Google Admin "Start authentication" passed with no error — DKIM signing now active
+- mail-tester.com test pending to confirm end-to-end SPF/DKIM/DMARC
+
 ## ASSET:toiflow 2026-06-06 → run #10 confirms rotated OLLAMA_SECRET end-to-end
 
 - ts-crypto `would-update` run #10 — manually triggered, **Success in 1m 2s**
