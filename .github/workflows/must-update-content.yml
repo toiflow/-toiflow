@@ -37,6 +37,10 @@ jobs:
             -H "x-secret: $OLLAMA_SECRET" \
             -d "$BODY" | jq -r '.response')
 
+          if [ -z "$RESPONSE" ] || [ "$RESPONSE" = "null" ]; then
+            echo "❌ Empty or null response from Ollama" && exit 1
+          fi
+
           echo "response<<EOF" >> $GITHUB_OUTPUT
           echo "$RESPONSE" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
