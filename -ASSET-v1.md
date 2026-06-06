@@ -9,6 +9,21 @@ REQUIRED FORMAT FOR EACH ASSET ENTRY:
 
 ## ASSET:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ASSET:ts-inbox 2026-06-06 → would-update-content.js sends must-email via Gmail API
+
+`would-update-content.js` updated to commit both content files AND send a daily email after committing.
+
+| Change | Detail |
+|---|---|
+| Subject | `must-email` |
+| Attachment | `must-email-YYYY-MM-DD.md` — ISSUE + ASSET analysis combined |
+| Send method | Gmail API `users.messages.send` — MIME multipart, base64url encoded |
+| Scope | `GMAIL_REFRESH_TOKEN` re-scoped from `gmail.readonly` to `https://mail.google.com/` |
+| Gmail creds | Same org-level secrets — `GMAIL_CLIENT_ID`, `GMAIL_CLIENT_SECRET`, `GMAIL_REFRESH_TOKEN` |
+| Workflow | `Update docs` step passes all three Gmail env vars alongside `GITHUB_TOKEN` |
+
+Email content is the Ollama-processed ISSUE + ASSET analysis — same text committed to `would/` files.
+
 ## ASSET:toiflow 2026-06-06 → ts-anz + ts-inbox both operational post-rename
 
 Both repos renamed and confirmed passing end-to-end.

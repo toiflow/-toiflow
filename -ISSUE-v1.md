@@ -9,6 +9,24 @@ REQUIRED FORMAT FOR EACH ISSUE ENTRY:
 
 ## ISSUE:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ISSUE:ts-inbox 2026-06-06 → GMAIL_REFRESH_TOKEN pasted in chat — token exposed, immediately rotated
+
+**What happened:** User pasted a valid `GMAIL_REFRESH_TOKEN` value directly into the chat conversation.
+
+**Immediate action:** Token revoked via Google Account → Security → Third-party access. New token generated via OAuth Playground (`https://mail.google.com/` scope) and set as org secret via `gh secret set --body`.
+
+**Hard rule:** Never paste any secret value in chat. Use terminal only: `gh secret set NAME --body "value"`.
+
+## ISSUE:ts-inbox 2026-06-06 → Gmail send 403 — refresh token missing send scope
+
+**Symptom:** `Gmail send failed: 403 — Request had insufficient authentication scopes. Reason: insufficientPermissions`
+
+**Root cause:** `GMAIL_REFRESH_TOKEN` was authorized with `gmail.readonly` scope only. The `users.messages.send` API endpoint requires `gmail.send` (or `https://mail.google.com/`).
+
+**Fix:** Re-authorized via OAuth Playground with `https://mail.google.com/` scope (covers all Gmail read + send operations). New refresh token set as org secret.
+
+**Hard rule:** Use `https://mail.google.com/` as the Gmail scope for any pipeline that reads AND sends — avoids scope gaps when adding new API operations.
+
 ## ISSUE:ts-anz 2026-06-06 → stale repo-level OLLAMA_SECRET masked org secret post-rotation
 
 **Symptom:** `ts-anz` failing with empty Ollama response after rename from `gs-anz`. `ts-inbox` and `ts-crypto` passing fine.
