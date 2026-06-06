@@ -9,6 +9,28 @@ REQUIRED FORMAT FOR EACH ASSET ENTRY:
 
 ## ASSET:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ASSET:toiflow 2026-06-06 → ts-anz + ts-inbox both operational post-rename
+
+Both repos renamed and confirmed passing end-to-end.
+
+| Repo | Was | Status |
+|---|---|---|
+| `ts-anz` | `gs-anz` | ✅ passing — stale repo-level secrets removed, now inherits org |
+| `ts-inbox` | `shell-email` | ✅ passing — Gmail API → Ollama → GitHub commit |
+
+**Changes per repo:**
+- `GITHUB_REPO` constant updated in `would-update-docs.js` + `would-update-md.js` (ts-anz) and `would-update-content.js` + `would-update-md.js` (ts-inbox)
+- Local git remotes updated to new URLs
+- Stale repo-level `OLLAMA_SECRET` + `OLLAMA_URL` deleted from ts-anz (were overriding org secret with pre-rotation value)
+
+**toiflow org repos:**
+| Repo | Purpose | Schedule |
+|---|---|---|
+| `ts-anz` | NZ interest rate RSS → Ollama → asset/issue log | 6am NZST daily |
+| `ts-inbox` | Gmail inbox → Ollama → asset/issue log | 6am NZST daily |
+| `ts-crypto` | (existing) | existing |
+| `-toiflow` | Reusable workflows + org docs | — |
+
 ## ASSET:toiflow 2026-06-06 → shell-email pipeline fully operational
 
 First end-to-end run confirmed. Gmail API → Ollama → GitHub commit all passing.
