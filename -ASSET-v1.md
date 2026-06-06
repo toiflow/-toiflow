@@ -9,6 +9,20 @@ REQUIRED FORMAT FOR EACH ASSET ENTRY:
 
 ## ASSET:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ASSET:toiflow 2026-06-06 → run #10 confirms rotated OLLAMA_SECRET end-to-end
+
+- ts-crypto `would-update` run #10 — manually triggered, **Success in 1m 2s**
+- Confirms new OLLAMA_SECRET flows correctly: GitHub org secret → Actions job → Cloudflare WAF → Ollama
+- 2 warnings: Node.js 20 deprecation notices — non-blocking
+- Pipeline fully operational post-rotation
+
+## ASSET:toiflow 2026-06-06 → OLLAMA_SECRET rotated — old value was exposed in public git history
+
+- Old secret hardcoded in `-ASSET-v1.md` "org secrets corrected" entry; visible in `git log` even after content redaction
+- New 64-char hex secret generated, GitHub org secret updated via `gh secret set --body`
+- Cloudflare WAF rule updated manually in dashboard — old token → 403, new token → 200 OK
+- Full git history removal (BFG / `git filter-repo`) not performed — old token invalidated so risk is low
+
 ## ASSET:toiflow 2026-06-06 → toiflow org repos made public — org secret visibility fix
 
 All three repos set to public via GitHub API to resolve GitHub Free plan org secret limitation:
@@ -31,7 +45,7 @@ Both org secrets re-set using `gh secret set --body` to remove the trailing newl
 | `OLLAMA_URL` | correct | correct | ✅ |
 
 ```bash
-gh secret set OLLAMA_SECRET --org toiflow --visibility all --body "dd61a15068a97962e43a97e0c077db887af7b781210003591fcae6f080698e39"
+gh secret set OLLAMA_SECRET --org toiflow --visibility all --body "[REDACTED]"
 gh secret set OLLAMA_URL --org toiflow --visibility all --body "https://local.toigroup.co.nz"
 ```
 

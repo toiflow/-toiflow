@@ -9,6 +9,16 @@ REQUIRED FORMAT FOR EACH ISSUE ENTRY:
 
 ## ISSUE:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ISSUE:toiflow 2026-06-06 → OLLAMA_SECRET exposed in public git history — content redaction insufficient
+
+**Symptom:** Old `OLLAMA_SECRET` value hardcoded in `-ASSET-v1.md` "org secrets corrected" entry, committed and pushed to public `toiflow/-toiflow` repo. Redacting the working copy (replacing with `[REDACTED]`) does NOT remove it from `git log` — the original value remains in history.
+
+**Root cause:** Secret value was written directly into a doc entry and pushed before a "never include secrets in docs" pattern was established.
+
+**Immediate fix:** Secret rotated to a new value. Old value is now invalid — Cloudflare WAF returns 403 for it.
+
+**Full removal (optional):** Requires history rewrite via `git filter-repo --replace-text` or BFG Repo-Cleaner + force-push. Not done — secret already invalidated so residual risk is low.
+
 ## ISSUE:toiflow 2026-06-06 → GitHub Free plan: org secrets only visible to public repos
 
 **Symptom:** `OLLAMA_SECRET length: 0` in ts-crypto GitHub Actions jobs despite org secret set with `visibility: all`. gs-anz worked because it had repo-level secret overrides.
