@@ -9,6 +9,30 @@ REQUIRED FORMAT FOR EACH ASSET ENTRY:
 
 ## ASSET:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ASSET:toiflow 2026-06-06 → GCP project config — OAuth scopes + Calendar API enabled
+
+**GCP Project ID:** `202052754278`
+**OAuth client type:** Web application
+**Credentials:** stored as org secrets — `GMAIL_CLIENT_ID`, `GMAIL_CLIENT_SECRET`
+
+**Authorised scopes on refresh token (`GMAIL_REFRESH_TOKEN`):**
+| Scope | Covers |
+|---|---|
+| `https://mail.google.com/` | Gmail read + send (ts-inbox) |
+| `https://www.googleapis.com/auth/calendar` | Calendar read + write (ts-event) |
+| `https://www.googleapis.com/auth/drive` | Drive read + write (future) |
+
+**APIs enabled in GCP project:**
+| API | Used by |
+|---|---|
+| Gmail API v1 | ts-inbox — read inbox + send email |
+| Google Calendar API v3 | ts-event — read calendar events |
+| Google Drive API v3 | future pipeline |
+
+Single refresh token covers all three — no re-auth needed when adding Drive or Calendar pipeline.
+
+**Note:** To enable a new Google API — GCP Console → APIs & Services → Enable APIs → search and enable. Token scope must also include the relevant scope (re-auth via OAuth Playground if not already included).
+
 ## ASSET:ts-inbox 2026-06-06 → would-update-content.js sends must-email via Gmail API
 
 `would-update-content.js` updated to commit both content files AND send a daily email after committing.
