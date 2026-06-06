@@ -31,7 +31,7 @@ REQUIRED FORMAT FOR EACH ASSET ENTRY:
 
 **Org secrets needed:** `ANTHROPIC_API_KEY` (+ existing `GITHUB_TOKEN` pattern)
 
-**Open decisions:** cross-repo checkout strategy, input scope (full codebase vs diff only), Claude model choice (cost vs quality), analysis type (code review / architecture / issue detection).
+**Decisions resolved:** `TOIFOOD_BACK_TOKEN` org secret (existing `repo`-scoped git token) for cross-repo checkout, `-MUST/` files as prompts per category, `claude-haiku-4-5-20251001` for daily runs, analysis type driven by `-MUST/` instruction files in `ts-toifood-back`. Build proceeding.
 
 ## ASSET:ts-event 2026-06-06 → pipeline fully operational — Google Calendar → Ollama → email
 
