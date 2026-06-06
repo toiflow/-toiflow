@@ -9,6 +9,20 @@ REQUIRED FORMAT FOR EACH ISSUE ENTRY:
 
 ## ISSUE:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ISSUE:toifood 2026-06-07 → admin:org PAT insufficient to create repos — needs public_repo scope
+
+**Symptom:** `gh repo create toifood/-toifood` fails — HTTP 403 "needs public_repo scope".
+
+**Root cause:** The `admin:org` PAT (`ghp_JJaV5...`) only has `admin:org` scope. Creating repos in an org requires `public_repo` (for public repos) or `repo` (for private).
+
+**Fix:** Create repos via browser UI or use a token with `repo` scope (e.g. `TOIFOOD_CROSS_REPO_TOKEN`).
+
+## ISSUE:toifood 2026-06-07 → secret names cannot start with GITHUB_ or contain hyphens
+
+**Symptom:** `gh secret set GITHUB-CROSS-REPO-TOKEN` → 422: hyphens not allowed. `gh secret set GITHUB_CROSS_REPO_TOKEN` → 422: cannot start with `GITHUB_`.
+
+**Fix:** Named `TOIFOOD_CROSS_REPO_TOKEN` — alphanumeric + underscores only, must not start with `GITHUB_`.
+
 ## ISSUE:toifood 2026-06-07 → open decisions before build — resolved
 
 1. **Cross-repo checkout** — `TOIFOOD_BACK_TOKEN` set as `toifood` org secret (git credential token, `repo` + `workflow` + `gist` scopes — read/write all repos). `ts-back` workflow uses this to checkout `jayreck996/ts-toifood-back@1-1-1`.

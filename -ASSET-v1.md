@@ -9,6 +9,13 @@ REQUIRED FORMAT FOR EACH ASSET ENTRY:
 
 ## ASSET:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ASSET:toifood 2026-06-07 → org created, org secret set — repos pending
+
+- `toifood` GitHub org created (free plan)
+- `TOIFOOD_CROSS_REPO_TOKEN` set as org secret (`visibility: all`) — `repo` full scope, used by `ts-back` to checkout `jayreck996/ts-toifood-back@1-1-1`
+- `ANTHROPIC_API_KEY` pending — needed before first pipeline run
+- Repos `-toifood` and `ts-back` pending creation (requires `public_repo` scope or browser UI)
+
 ## ASSET:toifood 2026-06-07 → new org planned — same architecture as toiflow, Claude API as LLM
 
 **Org:** `toifood` (mirrors `toiflow` structure)
