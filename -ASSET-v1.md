@@ -9,6 +9,12 @@ REQUIRED FORMAT FOR EACH ASSET ENTRY:
 
 ## ASSET:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ASSET:toiflow 2026-06-06 → must-update-content.yml — empty Ollama response guard added
+
+- Added `if [ -z "$RESPONSE" ] || [ "$RESPONSE" = "null" ]` check after curl call
+- Job now exits 1 with clear message if Ollama returns empty or null — prevents silent pass with empty output propagating to callers
+- Verified: ts-crypto run #2 correctly showed "Empty or null response from Ollama" at line 53
+
 ## ASSET:toiflow 2026-06-06 → must-update-access.yml renamed to must-update-content.yml
 
 - Renamed `.github/workflows/must-update-access.yml` → `must-update-content.yml`

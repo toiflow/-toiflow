@@ -9,6 +9,19 @@ REQUIRED FORMAT FOR EACH ISSUE ENTRY:
 
 ## ISSUE:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ISSUE:toiflow 2026-06-06 → must-update-content passed silently on empty Ollama response
+
+**Symptom:** `issue` and `asset` jobs completed with exit 0 but returned empty `response` output. Caller job then failed with `ISSUE_ANALYSIS not set`.
+
+**Root cause:** No guard in `must-update-content.yml` — if curl failed or Ollama returned `null`, `RESPONSE` was empty but the step exited 0, propagating empty output downstream.
+
+**Fix:** Added guard after curl call — fails the job immediately if `RESPONSE` is empty or `"null"`:
+```bash
+if [ -z "$RESPONSE" ] || [ "$RESPONSE" = "null" ]; then
+  echo "❌ Empty or null response from Ollama" && exit 1
+fi
+```
+
 ## ISSUE:toiflow 2026-06-06 → must-update-access renamed to must-update-content
 
 `must-update-access.yml` name no longer reflects its purpose — the workflow generates content via Ollama, not manages access.
