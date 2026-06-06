@@ -9,6 +9,27 @@ REQUIRED FORMAT FOR EACH ASSET ENTRY:
 
 ## ASSET:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ASSET:toiflow 2026-06-06 → shell-email pipeline fully operational
+
+First end-to-end run confirmed. Gmail API → Ollama → GitHub commit all passing.
+
+| Item | Detail |
+|---|---|
+| Gmail OAuth secrets | `GMAIL_CLIENT_ID`, `GMAIL_CLIENT_SECRET`, `GMAIL_REFRESH_TOKEN` set at org level |
+| OAuth client type | Web application (required for OAuth Playground redirect) |
+| Gmail query | Today's inbox, non-self, `gmail.readonly` scope |
+| Emails fetched | 14 on first run |
+| Reusable workflow | `must-update-content.yml` — both issue + asset jobs |
+| GitHub write | `would-update-content.js` via `github.token` |
+| Fix applied | Removed `"- "` double quotes from prompts — broke jq in `must-update-content.yml` |
+| Pending | Repo rename `shell-email` → `shell-inbox` or `gs-inbox` |
+
+## ASSET:toiflow 2026-06-06 → shell-email updated — must-update-content.yml ref + repo made public
+
+- `would-update.yml` updated: `must-update-access.yml` → `must-update-content.yml` (both issue + asset jobs)
+- `toiflow/shell-email` set to public — org secrets (`OLLAMA_SECRET`, `OLLAMA_URL`) now inherit on free plan
+- Pending: Gmail OAuth secrets (`GMAIL_CLIENT_ID`, `GMAIL_CLIENT_SECRET`, `GMAIL_REFRESH_TOKEN`) — set org-level once token obtained via OAuth Playground
+
 ## ASSET:toigroup 2026-06-06 → DKIM active for toigroup.co.nz — "Start authentication" passed
 
 - Root cause of all prior failures identified: embedded spaces in base64 `p=` value in Cloudflare DNS (see ISSUE entry)

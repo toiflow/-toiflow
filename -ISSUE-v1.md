@@ -9,6 +9,31 @@ REQUIRED FORMAT FOR EACH ISSUE ENTRY:
 
 ## ISSUE:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ISSUE:shell-email 2026-06-06 → jq syntax error — double quotes in prompt broke must-update-content.yml
+
+**Symptom:** `issue` and `asset` jobs failed with `jq: error: syntax error, unexpected IDENT` exit code 3.
+
+**Root cause:** `would-update.yml` prompts contained `"- "` (double-quoted dash-space). When GitHub Actions interpolated the prompt string directly into the bash `jq --arg prompt "..."` call in `must-update-content.yml`, the embedded double quotes broke the shell quoting.
+
+**Fix:** Replaced `"- " prefix` with `a dash and space` in both prompt strings in `would-update.yml`. No changes needed to `must-update-content.yml`.
+
+**Lesson:** Prompts passed as GitHub Actions inputs must not contain double quotes — they get interpolated unescaped into shell `--arg "..."` strings in `must-update-content.yml`.
+
+## ISSUE:shell-email 2026-06-06 → Gmail OAuth client invalid_client — Desktop app type blocked by Google
+
+**Symptom:** `Error 401: invalid_client` / "OAuth client was not found" on every auth attempt, including freshly created clients.
+
+**Root cause (confirmed):** Two compounding issues:
+1. Google Cloud project "toiflow" was newly created — OAuth clients took longer than expected to propagate
+2. OAuth Playground requires a **Web application** client type with `https://developers.google.com/oauthplayground` as an authorised redirect URI. Desktop app clients use `http://localhost` only and cannot be used with the Playground.
+
+**Fix:**
+1. Created new OAuth 2.0 client → type: **Web application** → added `https://developers.google.com/oauthplayground` to authorised redirect URIs
+2. Used OAuth Playground with gear ⚙️ → "Use your own OAuth credentials" → Web client ID + secret
+3. Authorised `gmail.readonly` scope → exchanged code → copied refresh token
+
+**Hard rule:** Always use Web application client type for OAuth Playground flows.
+
 ## ISSUE:toigroup 2026-06-06 → DKIM "Start authentication" kept failing — embedded spaces in base64 key
 
 **Symptom:** All previous "Start authentication" attempts in Google Admin returned "Email authentication was not verified" despite `Resolve-DnsName` confirming the record was live and appeared to match Google's expected value.
