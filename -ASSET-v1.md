@@ -9,6 +9,38 @@ REQUIRED FORMAT FOR EACH ASSET ENTRY:
 
 ## ASSET:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ASSET:toiflow 2026-06-06 → toiflow org repos made public — org secret visibility fix
+
+All three repos set to public via GitHub API to resolve GitHub Free plan org secret limitation:
+
+| Repo | Was | Now |
+|---|---|---|
+| `toiflow/-toiflow` | Private | Public |
+| `toiflow/gs-anz` | Private | Public |
+| `toiflow/ts-crypto` | Private | Public |
+
+**Result:** Org secrets `OLLAMA_SECRET` and `OLLAMA_URL` (visibility: all) now flow to all repos. No repo-level overrides needed.
+
+## ASSET:toiflow 2026-06-06 → org secrets corrected — re-set via --body flag (no trailing newline)
+
+Both org secrets re-set using `gh secret set --body` to remove the trailing newline from previous `echo`-pipe method:
+
+| Secret | Length before | Length after | Status |
+|---|---|---|---|
+| `OLLAMA_SECRET` | 65 (with `\n`) | 64 | ✅ WAF passes |
+| `OLLAMA_URL` | correct | correct | ✅ |
+
+```bash
+gh secret set OLLAMA_SECRET --org toiflow --visibility all --body "dd61a15068a97962e43a97e0c077db887af7b781210003591fcae6f080698e39"
+gh secret set OLLAMA_URL --org toiflow --visibility all --body "https://local.toigroup.co.nz"
+```
+
+## ASSET:toiflow 2026-06-06 → gh CLI installed — GitHub.cli v2.93.0
+
+Installed via `winget install GitHub.cli`. Required for org-level secret management (`admin:org` scope). Used with a classic PAT (`admin:org` scope) to set and verify org secrets without interactive browser flow.
+
+**Hard rule established:** All `toiflow` secrets must be set at org level — never repo-level.
+
 ## ASSET:toiflow 2026-06-06 → must-update-content.yml — empty Ollama response guard added
 
 - Added `if [ -z "$RESPONSE" ] || [ "$RESPONSE" = "null" ]` check after curl call

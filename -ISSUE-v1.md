@@ -9,6 +9,32 @@ REQUIRED FORMAT FOR EACH ISSUE ENTRY:
 
 ## ISSUE:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ISSUE:toiflow 2026-06-06 → GitHub Free plan: org secrets only visible to public repos
+
+**Symptom:** `OLLAMA_SECRET length: 0` in ts-crypto GitHub Actions jobs despite org secret set with `visibility: all`. gs-anz worked because it had repo-level secret overrides.
+
+**Root cause:** GitHub Free org plan restricts org-level Actions secrets to public repos only. Private repos cannot inherit org secrets — confirmed by `gh api /orgs/toiflow` returning `plan: "free"`.
+
+**Fix:** Made all `toiflow` org repos public (`-toiflow`, `gs-anz`, `ts-crypto`) via GitHub API:
+```bash
+gh api --method PATCH /repos/toiflow/<repo> --field private=false
+```
+Org secrets now flow to all repos. No paid plan upgrade required.
+
+**Side effect:** Public repo cannot call reusable workflows from a private repo — making `ts-crypto` public while `-toiflow` was still private triggered "workflow was not found" error. Fixed by making `-toiflow` public too.
+
+## ISSUE:toiflow 2026-06-06 → gh secret set via echo pipe stores trailing newline in secret value
+
+**Symptom:** `OLLAMA_SECRET length: 65` in GitHub Actions — correct value is 64 hex chars. WAF returned 403 despite secret being "set correctly".
+
+**Root cause:** `echo "value" | gh secret set` appends a `\n` newline to the value. The stored secret is `<token>\n` (65 chars), which doesn't match the WAF's expected 64-char token exactly.
+
+**Fix:** Always use `--body` flag when setting secrets:
+```bash
+gh secret set OLLAMA_SECRET --org toiflow --visibility all --body "dd61a15..."
+```
+Never pipe via `echo` — use `--body` or `printf '%s'` to avoid trailing newline.
+
 ## ISSUE:toiflow 2026-06-06 → must-update-content passed silently on empty Ollama response
 
 **Symptom:** `issue` and `asset` jobs completed with exit 0 but returned empty `response` output. Caller job then failed with `ISSUE_ANALYSIS not set`.
