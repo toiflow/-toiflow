@@ -9,6 +9,29 @@ REQUIRED FORMAT FOR EACH ISSUE ENTRY:
 
 ## ISSUE:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ISSUE:toifood 2026-06-07 → open decisions before build — cross-repo access, cost, analysis scope
+
+**Pending decisions:**
+
+1. **Cross-repo checkout** — `ts-back` workflow needs to checkout `ts-toifood-back`. Options:
+   - Make `ts-toifood-*` repos public (same fix as toiflow GitHub Free plan limitation)
+   - Use a PAT with `repo` read scope set as org secret
+
+2. **Input scope** — Full codebase vs targeted input per run:
+   - Full codebase: simpler, but Claude API cost scales with tokens
+   - `git diff` since last run: cheaper, misses new-repo context on first run
+   - Key files only (e.g. `src/`, config, README): good balance
+
+3. **Claude model choice:**
+   - `claude-haiku-4-5` — cheapest, fast, good for routine daily runs
+   - `claude-sonnet-4-6` — higher quality analysis, higher cost
+   - Recommend: Haiku for daily, Sonnet for on-demand deep review
+
+4. **Analysis type** — what the prompt asks for:
+   - Code review style (quality, issues, patterns)
+   - Architecture notes (structure, dependencies, tech debt)
+   - Issue detection (bugs, security, breaking changes)
+
 ## ISSUE:ts-event 2026-06-06 → Google Calendar API not enabled in GCP project
 
 **Symptom:** `Calendar GET users/me/calendarList failed: 403 — SERVICE_DISABLED`

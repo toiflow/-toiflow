@@ -9,6 +9,30 @@ REQUIRED FORMAT FOR EACH ASSET ENTRY:
 
 ## ASSET:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ASSET:toifood 2026-06-07 → new org planned — same architecture as toiflow, Claude API as LLM
+
+**Org:** `toifood` (mirrors `toiflow` structure)
+
+**Repos planned:**
+| Repo | Reads from | Purpose |
+|---|---|---|
+| `ts-back` | `ts-toifood-back` codebase | Backend code analysis |
+| `ts-front` | `ts-toifood-front` codebase | Frontend code analysis |
+| `ts-web` | `ts-toifood-web` codebase | Web code analysis |
+| `-toifood` | — | Reusable workflows + org docs |
+
+**Architecture delta vs toiflow:**
+| | toiflow | toifood |
+|---|---|---|
+| Input | RSS / Gmail / Calendar | Codebase files via `actions/checkout` |
+| LLM | Ollama (`qwen2.5:7b`) via Cloudflare tunnel | Claude API (`api.anthropic.com/v1/messages`) |
+| Auth secret | `OLLAMA_SECRET` | `ANTHROPIC_API_KEY` |
+| Context | ~4k tokens | 200k tokens — full codebase readable |
+
+**Org secrets needed:** `ANTHROPIC_API_KEY` (+ existing `GITHUB_TOKEN` pattern)
+
+**Open decisions:** cross-repo checkout strategy, input scope (full codebase vs diff only), Claude model choice (cost vs quality), analysis type (code review / architecture / issue detection).
+
 ## ASSET:ts-event 2026-06-06 → pipeline fully operational — Google Calendar → Ollama → email
 
 All 4 jobs passing. ts-event joins ts-anz and ts-inbox as fully operational toiflow pipelines.
