@@ -9,6 +9,18 @@ REQUIRED FORMAT FOR EACH ASSET ENTRY:
 
 ## ASSET:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ASSET:ts-file 2026-06-06 → pipeline fully operational — Google Sheets → Ollama → email
+
+All 4 jobs passing. Full toiflow pipeline suite now operational.
+
+| Repo | Source | Schedule | Email |
+|---|---|---|---|
+| `ts-anz` | NZ interest rate RSS | 6am NZST | — |
+| `ts-crypto` | Crypto data | 6am NZST | — |
+| `ts-inbox` | Gmail inbox | 6pm NZST | `must-email` |
+| `ts-event` | Google Calendar | 6pm NZST | `must-event` |
+| `ts-file` | Google Sheets (Drive API) | 6pm NZST | `must-file` |
+
 ## ASSET:toifood 2026-06-07 → pipeline built — -toifood and ts-back repos live
 
 **`toifood/-toifood`**

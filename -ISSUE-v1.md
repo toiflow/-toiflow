@@ -9,6 +9,19 @@ REQUIRED FORMAT FOR EACH ISSUE ENTRY:
 
 ## ISSUE:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ISSUE:ts-file 2026-06-06 → CSV special chars broke jq interpolation in must-update-content.yml
+
+**Symptom:** `issue` and `asset` jobs failed with `syntax error near unexpected token '('` exit code 2.
+
+**Root cause:** Sheet CSV data contained `(`, `)`, `"`, `$`, backtick characters. When passed as a GitHub Actions prompt input and interpolated into `must-update-content.yml`'s bash jq call, these characters broke shell quoting.
+
+**Fix:** Sanitize sheet data in fetch step before writing to GITHUB_OUTPUT:
+```bash
+SHEET=$(node would-read-md.js | tr -d '"\\`$()' | tr "'" ' ')
+```
+
+**Pattern:** Any user-controlled data (CSV, web content) passed as a prompt to `must-update-content.yml` must be sanitized — remove shell special characters before interpolation.
+
 ## ISSUE:toifood 2026-06-07 → admin:org PAT insufficient to create repos — needs public_repo scope
 
 **Symptom:** `gh repo create toifood/-toifood` fails — HTTP 403 "needs public_repo scope".
