@@ -9,6 +9,23 @@ REQUIRED FORMAT FOR EACH ASSET ENTRY:
 
 ## ASSET:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ASSET:toiflow 2026-06-08 → would-update-timing.yml confirmed as temporary pre-pipeline state
+
+**Pattern confirmed:** `would-update-timing.yml` (standalone quarterly cron) is a temporary state for org repos only. Once a pipeline is defined, it gets replaced by `would-update.yml` (daily) where timing becomes job 1 — identical to `ts-*` repo pattern.
+
+**Daily flow once pipeline exists:**
+```
+would-update.yml (daily)
+  job 1: timing  → creates quarterly files if new quarter, commits, skips if exist
+  job 2: fetch   → needs: timing (files guaranteed to exist)
+  job 3: analysis
+  job 4: update  → writes into could/CONTENT-ASSET-{quarter}.md
+```
+
+**No commit conflict:** timing commits empty files first (job 1), pipeline writes content into them second (job 4). Sequential jobs, same run. On non-quarter-start days, timing skips in seconds with no commit.
+
+**`ts-*` repos already prove this works.** `would-update-timing.yml` can be retired once `would-update.yml` is built for the org repo.
+
 ## ASSET:toiflow 2026-06-08 → unified document structure live across all three org repos
 
 All three org repos now fully set up. Verified via `gh api` — quarterly files committed by timing job.
