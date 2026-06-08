@@ -9,6 +9,26 @@ REQUIRED FORMAT FOR EACH ASSET ENTRY:
 
 ## ASSET:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ASSET:toiflow 2026-06-08 → architectural split — toiflow (cloud-context) vs toifood (repo/personal-context)
+
+The two org families have fundamentally different data sources, runners, and cadences.
+
+| | `toiflow` sub-repos | `toifood` sub-repos |
+|---|---|---|
+| **Context** | Cloud / external world | Repo / user / personal |
+| **Data source** | Internet — RSS, Google Sheets, market APIs, email, calendar | Repos — source code, schema, README, `-MUST/` prompts, PRs |
+| **Runner** | `ubuntu-latest` (internet access only) | Self-hosted Mac Mini (needs Claude Code + Ollama locally) |
+| **Cadence** | Daily (external data changes fast) | Weekly (code changes slower) |
+| **`would-read-md.js`** | Fetches from external APIs | Reads from repo via GitHub API or checkout |
+| **Analysis engine** | Ollama via Cloudflare Tunnel (`local.toigroup.co.nz`) | Claude Code skill (`/would-update`) |
+| **Examples** | ts-anz (rates), ts-file, ts-inbox, ts-event, ts-crypto | ts-back (codebase), future ts-front, ts-web |
+
+**Implication for org-level pipelines (when built):**
+- `-toiflow/would-update.yml` → cloud-context: org activity (GitHub API, workflow runs, PR stats)
+- `-toifood/would-update.yml` → repo-context: product health across ts-toifood-back/front/web
+
+**Rule:** New sub-repos go into `toiflow` if the data source is external. Into `toifood` if the data source is the codebase or user behaviour.
+
 ## ASSET:toiflow 2026-06-08 → would-update-timing.yml confirmed as temporary pre-pipeline state
 
 **Pattern confirmed:** `would-update-timing.yml` (standalone quarterly cron) is a temporary state for org repos only. Once a pipeline is defined, it gets replaced by `would-update.yml` (daily) where timing becomes job 1 — identical to `ts-*` repo pattern.
