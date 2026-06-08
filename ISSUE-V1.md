@@ -9,6 +9,18 @@ REQUIRED FORMAT FOR EACH ISSUE ENTRY:
 
 ## ISSUE:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ISSUE:toiflow 2026-06-08 → reusable workflow startup_failure — permissions: in called workflow
+
+**Symptom:** `startup_failure` (0 jobs run) when `would-update.yml` called `must-update-timing.yml` as a reusable workflow.
+
+**Root cause:** `permissions: contents: write` defined at the job level inside `must-update-timing.yml`. GitHub Actions rejects this at parse time when validating a called reusable workflow — the startup_failure happens before any jobs execute.
+
+**Fix:**
+1. Removed `permissions:` from `must-update-timing.yml` entirely
+2. Added `permissions: contents: write` at the **workflow level** in each calling `would-update.yml` — this propagates down to the reusable workflow job automatically
+
+**Hard rule:** Never set `permissions:` inside a reusable workflow (`workflow_call`). Set it in the calling workflow instead.
+
 ## ISSUE:ts-file 2026-06-06 → CSV special chars broke jq interpolation in must-update-content.yml
 
 **Symptom:** `issue` and `asset` jobs failed with `syntax error near unexpected token '('` exit code 2.

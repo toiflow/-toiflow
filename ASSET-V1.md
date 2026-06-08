@@ -9,6 +9,34 @@ REQUIRED FORMAT FOR EACH ASSET ENTRY:
 
 ## ASSET:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ASSET:toiflow 2026-06-08 → quarterly file rotation operational — must-update-timing.yml
+
+**Reusable workflow:** `toiflow/-toiflow/.github/workflows/must-update-timing.yml`
+
+Creates a new set of files at the start of each quarter. Idempotent — skips files that already exist.
+
+**Files created per quarter per repo:**
+| Path | Example |
+|---|---|
+| `ASSET-{quarter}.md` | `ASSET-2026Q3.md` |
+| `ISSUE-{quarter}.md` | `ISSUE-2026Q3.md` |
+| `could/CONTENT-ASSET-{quarter}.md` | `could/CONTENT-ASSET-2026Q3.md` |
+| `could/CONTENT-ISSUE-{quarter}.md` | `could/CONTENT-ISSUE-2026Q3.md` |
+| `would/LOG-METRIC-{quarter}.csv` | `would/LOG-METRIC-2026Q3.csv` |
+
+For repos with categories (e.g. ts-back), `could/` files are created per category instead of CONTENT default.
+
+**All ts-* repos updated:**
+- `must-update-timing.yml` added as first job (`timing`) in `would-update.yml`
+- `quarter_override` input added to `workflow_dispatch` for testing
+- `permissions: contents: write` set at workflow level so timing job can push
+- `getCurrentQuarter()` injected into `would-update-content.js` and `would-update-csv.js`
+- All V1 files renamed to 2026Q2 across ts-anz, ts-file, ts-inbox, ts-event, ts-crypto
+
+**Scheduling:** timing fires on the first daily run of each new quarter. No dedicated quarterly cron — relying on existing daily schedules.
+
+**Verified:** `quarter_override: 2026Q3` test created and committed all 5 Q3 files in ts-anz ✓
+
 ## ASSET:ts-file 2026-06-06 → pipeline fully operational — Google Sheets → Ollama → email
 
 All 4 jobs passing. Full toiflow pipeline suite now operational.
