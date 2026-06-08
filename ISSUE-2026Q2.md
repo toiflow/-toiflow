@@ -9,6 +9,18 @@ REQUIRED FORMAT FOR EACH ISSUE ENTRY:
 
 ## ISSUE:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ISSUE:toiflow 2026-06-08 → -toiflow folder structure ambiguity — two roles, one repo
+
+**Concern:** `-toiflow` currently plays two roles:
+1. **Container** — shared workflows (`must-update-timing.yml`, `must-update-content.yml`), org config, operational docs
+2. **Potential pipeline target** — could have its own `could/` (AI-generated analysis) and `would/` (CSV logs) if a pipeline ever runs against `-toiflow` itself
+
+**Current decision:** Role #1 only. `could/` and `would/` folders deferred — nothing to put there yet. Adding empty folders for symmetry creates confusion with no benefit.
+
+**What was applied:** Root docs renamed V1 → 2026Q2 for naming consistency with `ts-*` repos. No `could/` or `would/` added.
+
+**When to revisit:** If a future pipeline runs analysis against `-toiflow` (e.g. org-level activity summaries), add `could/` and `would/` at that point and add `-toiflow` as a target in `must-update-timing.yml`.
+
 ## ISSUE:toiflow 2026-06-08 → reusable workflow startup_failure — permissions: in called workflow
 
 **Symptom:** `startup_failure` (0 jobs run) when `would-update.yml` called `must-update-timing.yml` as a reusable workflow.
