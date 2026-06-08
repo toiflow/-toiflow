@@ -103,7 +103,7 @@ REQUIRED FORMAT FOR EACH ISSUE ENTRY:
           fi
 
           # would/ CSV log
-          create_file "would/-log-asset-${QUARTER}.csv" "$CSV_HEADER"
+          create_file "would/LOG-METRIC-${QUARTER}.csv" "$CSV_HEADER"
 
           echo "created=$CREATED" >> $GITHUB_OUTPUT
 
