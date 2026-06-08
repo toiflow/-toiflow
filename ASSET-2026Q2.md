@@ -9,6 +9,17 @@ REQUIRED FORMAT FOR EACH ASSET ENTRY:
 
 ## ASSET:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ASSET:toiflow 2026-06-08 → GitHub Actions scheduled runs on ubuntu-latest delay 1.5–2h from cron time
+
+Observed pattern across ts-news `0 */3 * * *` schedule: actual run times are consistently 1–2h after the scheduled UTC time. Do not flag missing runs until 2h past the scheduled time.
+
+| Scheduled | Actual | Delay |
+|---|---|---|
+| 03:00 UTC | 04:50 | ~1h50m |
+| 21:00 UTC | 22:11 | ~1h11m |
+| 18:00 UTC | 19:42 | ~1h42m |
+| 15:00 UTC | 16:24 | ~1h24m |
+
 ## ASSET:toiflow 2026-06-08 → architectural split — toiflow (cloud-context) vs toifood (repo/personal-context)
 
 The two org families have fundamentally different data sources, runners, and cadences.

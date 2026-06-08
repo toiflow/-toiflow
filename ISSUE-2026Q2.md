@@ -9,6 +9,10 @@ REQUIRED FORMAT FOR EACH ISSUE ENTRY:
 
 ## ISSUE:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ISSUE:toiflow 2026-06-08 → OBSERVED — ts-news 6pm NZT run appeared missing, confirmed GitHub Actions delay
+
+Scheduled run at 06:00 UTC (6pm NZT) had not appeared at 07:49 UTC (~1h49m past schedule). Not a real failure — GitHub Actions `ubuntu-latest` scheduler consistently delays 1.5–2h past cron time. Pattern confirmed across 5 prior runs. No action needed.
+
 ## ISSUE:toiflow 2026-06-08 → RESOLVED — unified document structure live across all org repos
 
 All pending actions from plan entry below completed:
