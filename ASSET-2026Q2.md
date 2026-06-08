@@ -9,6 +9,36 @@ REQUIRED FORMAT FOR EACH ASSET ENTRY:
 
 ## ASSET:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ASSET:toiflow 2026-06-08 → all org repos adopt unified document structure — automated documents factory
+
+**Decision (supersedes "container-only" entry below):** `-toiflow`, `-toifood`, and `-toifood-dev` all adopt the same structure as `ts-*` pipeline repos. Each org repo is both a container AND a pipeline target.
+
+**Unified structure across all org repos:**
+```
+-{org}/
+├── .github/workflows/would-update.yml   ← quarterly cron, timing-only until pipeline defined
+├── ASSET-{quarter}.md / ISSUE-{quarter}.md
+├── could/CONTENT-ASSET-{quarter}.md
+├── could/CONTENT-ISSUE-{quarter}.md
+└── would/LOG-METRIC-{quarter}.csv
+```
+
+**Content type:** default CONTENT category. Undecided between org activity summaries (PRs, workflows, repos) vs business docs (price, usage). Category can be renamed once decided — no rework needed.
+
+**Rationale:** "automated documents factory" — every repo in every org looks identical. No special cases, no exceptions. Infrastructure-ready now; pipeline wired up later.
+
+## ASSET:toiflow 2026-06-08 → -toiflow folder structure decision — role #1 only
+
+**Concern:** `-toiflow` currently plays two roles:
+1. **Container** — shared workflows (`must-update-timing.yml`, `must-update-content.yml`), org config, operational docs
+2. **Potential pipeline target** — could have its own `could/` (AI-generated analysis) and `would/` (CSV logs) if a pipeline ever runs against `-toiflow` itself
+
+**Current decision:** Role #1 only. `could/` and `would/` folders deferred — nothing to put there yet. Adding empty folders for symmetry creates confusion with no benefit.
+
+**What was applied:** Root docs renamed V1 → 2026Q2 for naming consistency with `ts-*` repos. No `could/` or `would/` added.
+
+**When to revisit:** If a future pipeline runs analysis against `-toiflow` (e.g. org-level activity summaries), add `could/` and `would/` at that point and add `-toiflow` as a target in `must-update-timing.yml`.
+
 ## ASSET:toiflow 2026-06-08 → -toiflow root docs renamed V1 → 2026Q2
 
 Applied quarterly naming convention to `-toiflow` root docs for consistency with `ts-*` repos.

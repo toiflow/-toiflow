@@ -9,6 +9,37 @@ REQUIRED FORMAT FOR EACH ISSUE ENTRY:
 
 ## ISSUE:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ISSUE:toiflow 2026-06-08 → plan — full document structure + container role across all org repos
+
+**Scope:** `-toiflow`, `-toifood`, `-toifood-dev` all adopt the same structure.
+
+**Structure per org repo:**
+```
+-{org}/
+├── .github/workflows/
+│   ├── would-update.yml          ← timing-only, quarterly cron (pipeline TBD)
+│   └── must-update-*.yml         ← shared reusable workflows (container role)
+├── .claude/commands/             ← shared skills (container role)
+├── ASSET-{quarter}.md            ← org-level operational docs
+├── ISSUE-{quarter}.md            ← org-level operational docs
+├── could/
+│   ├── CONTENT-ASSET-{quarter}.md  ← AI-generated content (pipeline TBD)
+│   └── CONTENT-ISSUE-{quarter}.md
+└── would/
+    └── LOG-METRIC-{quarter}.csv    ← raw metrics log (pipeline TBD)
+```
+
+**Content type (undecided):** org activity summaries (PRs, workflows, repos) OR business-level docs (price, usage). Using default CONTENT category until decided — easy to rename to named categories later.
+
+**Quarterly cron:** `0 0 1 1,4,7,10 *` — dedicated quarterly trigger since no daily pipeline to piggyback on.
+
+**Pending actions:**
+- [ ] Add `would-update.yml` to `-toiflow`
+- [ ] Add `would-update.yml` to `-toifood`
+- [ ] Add `would-update.yml` to `-toifood-dev`
+- [ ] Rename V1 → 2026Q2 in `-toifood` and `-toifood-dev`
+- [ ] Trigger timing job to create `could/` and `would/` quarterly files in all three
+
 ## ISSUE:toiflow 2026-06-08 → -toiflow folder structure ambiguity — two roles, one repo
 
 **Concern:** `-toiflow` currently plays two roles:
