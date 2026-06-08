@@ -9,6 +9,17 @@ REQUIRED FORMAT FOR EACH ASSET ENTRY:
 
 ## ASSET:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ASSET:toiflow 2026-06-08 → -toiflow root docs renamed V1 → 2026Q2
+
+Applied quarterly naming convention to `-toiflow` root docs for consistency with `ts-*` repos.
+
+| Before | After |
+|---|---|
+| `ASSET-V1.md` | `ASSET-2026Q2.md` |
+| `ISSUE-V1.md` | `ISSUE-2026Q2.md` |
+
+No `could/` or `would/` folders added — see ISSUE entry for rationale.
+
 ## ASSET:toiflow 2026-06-08 → quarterly file rotation operational — must-update-timing.yml
 
 **Reusable workflow:** `toiflow/-toiflow/.github/workflows/must-update-timing.yml`
