@@ -9,6 +9,14 @@ REQUIRED FORMAT FOR EACH ISSUE ENTRY:
 
 ## ISSUE:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ISSUE:toiflow 2026-06-08 → RESOLVED — unified document structure live across all org repos
+
+All pending actions from plan entry below completed:
+- [x] `would-update.yml` added to all three org repos
+- [x] V1 → 2026Q2 renamed in `-toifood` and `-toifood-dev`
+- [x] Timing job triggered — `could/` and `would/` quarterly files created in all three
+- [ ] Content type undecided — org activity summaries vs business docs (price, usage) — open
+
 ## ISSUE:toiflow 2026-06-08 → plan — full document structure + container role across all org repos
 
 **Scope:** `-toiflow`, `-toifood`, `-toifood-dev` all adopt the same structure.

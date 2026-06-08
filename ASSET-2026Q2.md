@@ -9,6 +9,18 @@ REQUIRED FORMAT FOR EACH ASSET ENTRY:
 
 ## ASSET:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ASSET:toiflow 2026-06-08 → unified document structure live across all three org repos
+
+All three org repos now fully set up. Verified via `gh api` — quarterly files committed by timing job.
+
+| Repo | `ASSET/ISSUE` | `could/` | `would/` | `would-update.yml` |
+|---|---|---|---|---|
+| `toiflow/-toiflow` | `2026Q2` ✅ | ✅ | ✅ | quarterly cron ✅ |
+| `toifood/-toifood` | `2026Q2` ✅ | ✅ | ✅ | quarterly cron ✅ |
+| `toifood-dev/-toifood-dev` | `2026Q2` ✅ | ✅ | ✅ | quarterly cron ✅ |
+
+**Next:** decide content type for `could/` — org activity summaries vs business docs (price, usage) — then wire up pipeline.
+
 ## ASSET:toiflow 2026-06-08 → all org repos adopt unified document structure — automated documents factory
 
 **Decision (supersedes "container-only" entry below):** `-toiflow`, `-toifood`, and `-toifood-dev` all adopt the same structure as `ts-*` pipeline repos. Each org repo is both a container AND a pipeline target.
