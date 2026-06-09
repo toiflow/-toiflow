@@ -9,6 +9,10 @@ REQUIRED FORMAT FOR EACH ASSET ENTRY:
 
 ## ASSET:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ASSET:toiflow 2026-06-08 → GitHub Actions scheduler can miss multiple consecutive triggers under backlog
+
+Observed 2026-06-08: ts-news missed both 06:00 and 09:00 UTC scheduled triggers (4h+ gap), not just the usual 1.5–2h delay. Workflow remained active throughout. Manual `workflow_dispatch` is the reliable recovery — runs immediately on ubuntu-latest regardless of scheduler state.
+
 ## ASSET:toiflow 2026-06-08 → GitHub Actions scheduled runs on ubuntu-latest delay 1.5–2h from cron time
 
 Observed pattern across ts-news `0 */3 * * *` schedule: actual run times are consistently 1–2h after the scheduled UTC time. Do not flag missing runs until 2h past the scheduled time.
