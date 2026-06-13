@@ -12,6 +12,10 @@ REQUIRED FORMAT FOR EACH ISSUE ENTRY:
 
 ## ISSUE:{NAME OF ENVIRONMENT} {YYYY-MM-DD HH:MM} → {CONTENT}
 
+## ISSUE:toiflow 2026-06-13 → PM2 process cloudflare-tunnel renamed to toifood-tunnel
+
+Renamed for naming consistency — both tunnels now follow the `{product}-tunnel` convention alongside `toigroup-tunnel`. No functional change: same binary (`/opt/homebrew/bin/cloudflared`), same config (`~/.cloudflared/toifood.yml`), same ingress rules. Historical doc references to `cloudflare-tunnel` remain valid as prior state.
+
 ## ISSUE:toiflow 2026-06-08 → RESOLVED — ts-news scheduler missed 06:00 and 09:00 UTC triggers, manually triggered
 
 Both the 06:00 and 09:00 UTC scheduled runs failed to fire (4h+ gap). Workflow was active, repo was not stale. Root cause: GitHub Actions scheduler backlog. Manually triggered at 09:49 UTC — all 4 jobs passed in 44s, content and CSV updated. No code changes needed.
